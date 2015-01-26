@@ -31,7 +31,14 @@ class Chrome_Extension_Locale extends Translations {
 		$json = array();
 		
 		foreach ( $this->entries as $entry ) {
-			$json[$entry->key()] = array( 'message' => $entry->singular );
+			$json_entry = array();
+			$json_entry['messages'] = $entry->singular;
+			
+			if ( isset( $entry->context ) ) {
+				$json_entry['description'] = $entry->context;
+			}
+			
+			$json[$entry->key()] = $json_entry;
 		}
 		
 		return json_encode( $json );
@@ -65,6 +72,10 @@ class Chrome_Extension_Locale extends Translations {
 			$entry = new Chrome_Extension_Entry();
 			$entry->singular = $data->message;
 			$entry->_key = $key;
+			
+			if ( isset( $data->description ) ) {
+				$entry->context = $data->description;
+			}
 			
 			// $this->add_comment_to_entry( $entry, $line );
 			// $entry->context .= ...;
